@@ -67,6 +67,12 @@
             box-shadow: 0 0 15px 3px rgba(249, 115, 22, 0.7), inset 0 0 10px rgba(249, 115, 22, 0.4);
             border: 2px solid #f97316;
         }
+        .sticky-header {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 1rem; /* 16px from the top */
+            z-index: 50; /* Ensure it stays on top */
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-gray-900 to-slate-800 text-white antialiased">
@@ -81,7 +87,7 @@
 
             <!-- Setup Section -->
             <div id="setup-section" class="bg-slate-900/50 p-6 rounded-2xl shadow-2xl mb-8 ring-1 ring-white/10 backdrop-blur-sm">
-                <h2 class="text-2xl font-bold mb-4 border-b-2 border-slate-700 pb-2">1. Tournament Setup</h2>
+                <h2 class="text-2xl font-bold mb-4 border-b-2 border-slate-700 pb-2">Tournament Setup</h2>
                 <div class="grid md:grid-cols-2 gap-6">
                     <div>
                         <label for="tournament-title" class="block mb-2 font-medium text-gray-300">Tournament Name</label>
@@ -100,13 +106,13 @@
 
                 <div class="mt-8 text-center">
                     <button id="setup-button" class="btn bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg">
-                        Setup & Start Tournament
+                        Start Tournament
                     </button>
                 </div>
             </div>
 
             <!-- Control Section -->
-            <div id="control-section" class="hidden bg-slate-900/50 p-6 rounded-2xl shadow-2xl ring-1 ring-white/10 backdrop-blur-sm">
+            <div id="control-section" class="hidden sticky-header bg-slate-900/50 p-6 rounded-2xl shadow-2xl ring-1 ring-white/10 backdrop-blur-sm mb-8">
                  <div class="flex flex-col md:flex-row justify-between items-center mb-6">
                     <h2 id="display-tournament-title" class="text-3xl font-bold text-orange-400 text-shadow"></h2>
                     <div class="flex items-center space-x-4 mt-4 md:mt-0">
@@ -125,10 +131,10 @@
                     </button>
                     <p id="next-game-info" class="text-gray-400 mt-2"></p>
                 </div>
+            </div>
 
-                <div id="results-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Result cards will be injected here -->
-                </div>
+            <div id="results-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Result cards will be injected here -->
             </div>
         </div>
 
@@ -157,7 +163,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const app = {
                 // --- CONFIGURATION ---
-                STORAGE_KEY: 'ff_map_randomizer_state_en_v13',
+                STORAGE_KEY: 'ff_map_randomizer_state_en_v14',
                 // All available maps. Using official Free Fire links.
                 ALL_MAPS: [
                     { id: 'bermuda', name: 'Bermuda', img: 'https://dl.dir.freefiremobile.com/common/Local/TH/CommuTournament/map/Bermuda.jpg' },
