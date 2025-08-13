@@ -34,12 +34,12 @@
         .map-checkbox:checked + label .checkmark {
             opacity: 1;
         }
-        .map-card-name {
+        .map-card-name-selected {
             opacity: 0;
             transform: translateY(10px);
             transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
         }
-        .map-checkbox:checked + label .map-card-name {
+        .map-checkbox:checked + label .map-card-name-selected {
             opacity: 1;
             transform: translateY(0);
         }
@@ -63,18 +63,9 @@
             transform: scale(1.05);
             box-shadow: 0 4px 20px rgba(0,0,0,0.2);
         }
-        .card-front.shuffling {
-            animation: shuffle-glow 0.2s infinite alternate;
-        }
-        @keyframes shuffle-glow {
-            from {
-                box-shadow: 0 0 15px #fff, 0 0 25px #fff;
-                border-color: #fff;
-            }
-            to {
-                box-shadow: 0 0 25px #f97316, 0 0 40px #f97316;
-                border-color: #f97316;
-            }
+        .locked-in {
+            box-shadow: 0 0 15px 3px rgba(249, 115, 22, 0.7), inset 0 0 10px rgba(249, 115, 22, 0.4);
+            border: 2px solid #f97316;
         }
     </style>
 </head>
@@ -166,15 +157,15 @@
         document.addEventListener('DOMContentLoaded', () => {
             const app = {
                 // --- CONFIGURATION ---
-                STORAGE_KEY: 'ff_map_randomizer_state_en_v6',
-                // All available maps. Add or edit maps here.
+                STORAGE_KEY: 'ff_map_randomizer_state_en_v13',
+                // All available maps. Using official Free Fire links.
                 ALL_MAPS: [
-                    { id: 'bermuda', name: 'Bermuda', img: 'https://placehold.co/400x200/2a9d8f/ffffff?text=Bermuda' },
-                    { id: 'purgatory', name: 'Purgatory', img: 'https://placehold.co/400x200/e9c46a/ffffff?text=Purgatory' },
-                    { id: 'kalahari', name: 'Kalahari', img: 'https://placehold.co/400x200/f4a261/ffffff?text=Kalahari' },
-                    { id: 'alpine', name: 'Alpine', img: 'https://placehold.co/400x200/e76f51/ffffff?text=Alpine' },
-                    { id: 'nexterra', name: 'NeXTerra', img: 'https://placehold.co/400x200/264653/ffffff?text=NeXTerra' },
-                    { id: 'solara', name: 'Solara', img: 'https://placehold.co/400x200/a56cc1/ffffff?text=Solara' },
+                    { id: 'bermuda', name: 'Bermuda', img: 'https://dl.dir.freefiremobile.com/common/Local/TH/CommuTournament/map/Bermuda.jpg' },
+                    { id: 'purgatory', name: 'Purgatory', img: 'https://dl.dir.freefiremobile.com/common/Local/TH/CommuTournament/map/Purgatory.jpg' },
+                    { id: 'kalahari', name: 'Kalahari', img: 'https://dl.dir.freefiremobile.com/common/Local/TH/CommuTournament/map/kalahari.jpg' },
+                    { id: 'alpine', name: 'Alpine', img: 'https://dl.dir.freefiremobile.com/common/Local/TH/CommuTournament/map/Alpine.jpg' },
+                    { id: 'nexterra', name: 'NeXTerra', img: 'https://dl.dir.freefiremobile.com/common/Local/TH/CommuTournament/map/Nexterra.jpg' },
+                    { id: 'solara', name: 'Solara', img: 'https://dl.dir.freefiremobile.com/common/Local/TH/CommuTournament/map/solara.jpg' },
                 ],
 
                 // --- STATE ---
@@ -186,6 +177,7 @@
                     results: [],
                     isSetup: false,
                 },
+                animationRunning: false,
 
                 // --- UI ELEMENTS ---
                 ui: {
@@ -281,9 +273,17 @@
                                 <label for="map-${map.id}" class="map-card cursor-pointer block border-4 border-transparent rounded-lg overflow-hidden relative aspect-video">
                                     <div class="w-full h-full" style="background-image: url('${map.img}'); background-size: cover; background-position: center;"></div>
                                     <div class="overlay absolute inset-0 bg-black opacity-50 transition-opacity duration-300"></div>
+                                    
+                                    <!-- Name that appears on selection -->
                                     <div class="absolute inset-0 flex items-center justify-center p-2">
-                                        <h4 class="map-card-name text-2xl font-bold text-white uppercase text-shadow">${map.name}</h4>
+                                        <h4 class="map-card-name-selected text-3xl font-bold text-white uppercase text-shadow">${map.name}</h4>
                                     </div>
+
+                                    <!-- Permanent label at the bottom -->
+                                    <div class="absolute bottom-0 left-0 w-full p-1 bg-black/60">
+                                        <p class="text-white text-center text-xs font-bold uppercase tracking-wider">${map.name}</p>
+                                    </div>
+
                                     <div class="checkmark absolute top-2 right-2 w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center opacity-0 transition-opacity duration-300">
                                         <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                                     </div>
@@ -338,7 +338,7 @@
                         this.ui.setupSection.style.display = 'none';
                         this.ui.controlSection.style.display = 'block';
                         this.ui.displayTournamentTitle.textContent = this.state.tournamentTitle;
-                        this.renderGrid(this.ui.resultsGrid, isNewRandom);
+                        this.renderGrid(this.ui.resultsGrid, false); // Referee view always renders instantly
                         this.updateRandomizeButton();
                     } else {
                         this.ui.setupSection.style.display = 'block';
@@ -352,9 +352,11 @@
                 
                 updateRandomizeButton() {
                     const nextGameNumber = this.state.results.length + 1;
-                    if (nextGameNumber > this.state.totalGames) {
+                    if (this.animationRunning || nextGameNumber > this.state.totalGames) {
                         this.ui.randomizeButton.disabled = true;
-                        this.ui.nextGameInfo.textContent = 'The tournament has ended!';
+                        if (nextGameNumber > this.state.totalGames) {
+                           this.ui.nextGameInfo.textContent = 'The tournament has ended!';
+                        }
                     } else {
                         this.ui.randomizeButton.disabled = false;
                         this.ui.nextGameInfo.textContent = `Click to randomize map for Game ${nextGameNumber}`;
@@ -362,47 +364,92 @@
                 },
 
                 async randomizeNextMap() {
-                    if (this.ui.randomizeButton.disabled) return;
-                    this.ui.randomizeButton.disabled = true;
+                    if (this.animationRunning) return;
+                    this.animationRunning = true;
+                    this.updateRandomizeButton();
 
                     const nextGameNumber = this.state.results.length + 1;
-
-                    // --- Suspense Animation ---
-                    const targetCardElement = document.getElementById(`result-card-${nextGameNumber}`);
-                    if (targetCardElement) {
-                        const frontFace = targetCardElement.querySelector('.card-front');
-                        frontFace.classList.add('shuffling');
-                        await new Promise(resolve => setTimeout(resolve, 2000)); // 2-second animation
-                        frontFace.classList.remove('shuffling');
-                    }
 
                     // --- Pool Reset Logic ---
                     if (nextGameNumber === 7) {
                         this.state.remainingMaps = [...this.state.initialMaps];
                         this.showToast('Map pool has been reset!', 'bg-blue-500');
                     }
-                    
-                    // If pool is empty (for games > 7), reset it.
-                    if(this.state.remainingMaps.length === 0) {
+                    if (this.state.remainingMaps.length === 0) {
                         this.state.remainingMaps = [...this.state.initialMaps];
                     }
-
-                    // --- Randomization Logic ---
+                    
+                    // --- Actual Randomization ---
                     const remaining = this.state.remainingMaps;
                     const randomIndex = Math.floor(Math.random() * remaining.length);
                     const selectedMap = remaining[randomIndex];
 
+                    // --- Update State ---
                     this.state.results.push({
                         game: nextGameNumber,
                         map: selectedMap,
                     });
                     this.state.remainingMaps.splice(randomIndex, 1);
+                    
+                    // Save state so team view can pick up the change
+                    this.saveState(); 
 
-                    this.saveState();
-                    this.updateRefereeView(true); // Animate the new card
-                    this.updateTeamView(); // Sync team view
+                    // --- Animate on referee view ---
+                    const refereeCard = document.getElementById(`result-card-${nextGameNumber}`);
+                    await this.runRandomizationAnimation(refereeCard, selectedMap);
+                    
+                    this.animationRunning = false;
+                    this.updateRandomizeButton();
                 },
                 
+                async runRandomizationAnimation(targetCardElement, finalMap) {
+                    if (!targetCardElement) return Promise.resolve();
+
+                    const cardBack = targetCardElement.querySelector('.card-back');
+                    const mapNameEl = cardBack.querySelector('h3');
+                    const animationDuration = 2500; // 2.5 seconds
+                    const updateInterval = 80; // ms, faster for smoother feel
+                    let startTime = null;
+                    let animationFrameId = null;
+
+                    // Flip the card instantly to the back
+                    targetCardElement.style.transition = 'none';
+                    targetCardElement.classList.add('revealed');
+
+                    // Use remainingMaps for the animation reel
+                    const reel = [...this.state.remainingMaps, finalMap, ...this.state.remainingMaps, finalMap].sort(() => 0.5 - Math.random());
+                    let reelIndex = 0;
+                    let lastUpdateTime = 0;
+
+                    return new Promise(resolve => {
+                        const animate = (timestamp) => {
+                            if (!startTime) startTime = timestamp;
+                            const elapsedTime = timestamp - startTime;
+
+                            if (timestamp - lastUpdateTime > updateInterval) {
+                                const currentMap = reel[reelIndex % reel.length];
+                                cardBack.style.backgroundImage = `url('${currentMap.img}')`;
+                                mapNameEl.textContent = currentMap.name;
+                                reelIndex++;
+                                lastUpdateTime = timestamp;
+                            }
+
+                            if (elapsedTime < animationDuration) {
+                                animationFrameId = requestAnimationFrame(animate);
+                            } else {
+                                // Stop the animation and show the final result
+                                cancelAnimationFrame(animationFrameId);
+                                cardBack.style.backgroundImage = `url('${finalMap.img}')`;
+                                mapNameEl.textContent = finalMap.name;
+                                cardBack.classList.add('locked-in');
+                                targetCardElement.style.transition = 'transform 0.7s ease';
+                                resolve();
+                            }
+                        };
+                        animationFrameId = requestAnimationFrame(animate);
+                    });
+                },
+
                 renderGrid(container, isNewRandom) {
                     container.innerHTML = '';
                     const newGameNumber = this.state.results.length;
@@ -412,11 +459,8 @@
                         const card = this.createResultCard(i, result);
 
                         if (result) {
-                            if (isNewRandom && result.game === newGameNumber) {
-                                // This is the new card, let the CSS transition handle the flip
-                                setTimeout(() => card.classList.add('revealed'), 10);
-                            } else {
-                                // This is an old card, reveal instantly without animation
+                            // Reveal all cards instantly except the one being animated
+                            if (!isNewRandom || result.game !== newGameNumber) {
                                 card.style.transition = 'none';
                                 card.classList.add('revealed');
                             }
@@ -432,6 +476,7 @@
                     
                     const mapName = result ? result.map.name : '???';
                     const mapImg = result ? result.map.img : 'https://placehold.co/400x200/454545/999999?text=%3F';
+                    const isLocked = result ? 'locked-in' : '';
                     
                     card.innerHTML = `
                         <!-- Card Front (Hidden) -->
@@ -440,7 +485,7 @@
                             <h3 class="text-xl font-bold text-slate-400 mt-2">Game ${gameNumber}</h3>
                         </div>
                         <!-- Card Back (Visible) -->
-                        <div class="card-face card-back absolute w-full h-full rounded-xl overflow-hidden shadow-lg" style="background-image: url('${mapImg}'); background-size: cover; background-position: center;">
+                        <div class="card-face card-back absolute w-full h-full rounded-xl overflow-hidden shadow-lg ${isLocked}" style="background-image: url('${mapImg}'); background-size: cover; background-position: center;">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                             <div class="absolute bottom-0 left-0 p-4 w-full">
                                 <p class="text-gray-200 text-sm font-medium">Game ${gameNumber}</p>
@@ -481,7 +526,9 @@
                     this.updateTeamView();
                 },
 
-                updateTeamView() {
+                async updateTeamView() {
+                    if (this.animationRunning) return;
+
                     if (!this.state.isSetup) {
                         this.ui.teamResultsGrid.style.display = 'none';
                         this.ui.teamResultsGrid.innerHTML = ''; // Clear the grid
@@ -494,30 +541,21 @@
                     this.ui.teamResultsGrid.style.display = 'grid';
                     this.ui.teamViewTitle.textContent = this.state.tournamentTitle;
                     
-                    // For team view, we find the latest revealed card and animate it.
-                    const lastRevealedGame = this.state.results.length;
-                    const currentlyDisplayedCards = this.ui.teamResultsGrid.children.length;
-                    
-                    // Only re-render fully if necessary (e.g., initial load or reset)
-                    if (currentlyDisplayedCards !== this.state.totalGames) {
+                    const revealedCount = this.ui.teamResultsGrid.querySelectorAll('.revealed').length;
+                    const isNewRandom = revealedCount < this.state.results.length;
+
+                    if (isNewRandom) {
+                        this.animationRunning = true;
+                        this.renderGrid(this.ui.teamResultsGrid, true);
+                        const newGameNumber = this.state.results.length;
+                        const finalMap = this.state.results[newGameNumber - 1].map;
+                        const teamCard = document.querySelector(`#team-results-grid #result-card-${newGameNumber}`);
+                        
+                        await this.runRandomizationAnimation(teamCard, finalMap);
+                        this.animationRunning = false;
+                    } else if (this.ui.teamResultsGrid.children.length !== this.state.totalGames) {
+                        // Handle setup/reset case
                         this.renderGrid(this.ui.teamResultsGrid, false);
-                    } else {
-                        // Just update the last card
-                        const result = this.state.results.find(r => r.game === lastRevealedGame);
-                        if (result) {
-                            const cardToUpdate = document.querySelector(`#team-results-grid #result-card-${lastRevealedGame}`);
-                            if (cardToUpdate && !cardToUpdate.classList.contains('revealed')) {
-                                const newCard = this.createResultCard(lastRevealedGame, result);
-                                newCard.style.transition = 'none'; // Set up for animation
-                                cardToUpdate.replaceWith(newCard);
-                                
-                                setTimeout(() => {
-                                    const finalCard = document.querySelector(`#team-results-grid #result-card-${lastRevealedGame}`);
-                                    finalCard.style.transition = 'transform 0.7s ease';
-                                    finalCard.classList.add('revealed');
-                                }, 10);
-                            }
-                        }
                     }
                 }
             };
