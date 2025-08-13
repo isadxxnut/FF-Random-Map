@@ -78,84 +78,122 @@
 <body class="bg-gradient-to-br from-gray-900 to-slate-800 text-white antialiased">
 
     <div id="app" class="container mx-auto p-4 md:p-8">
-        <!-- Referee View -->
-        <div id="referee-view" class="hidden">
+        
+        <!-- Mode Selection View -->
+        <div id="mode-selection-view">
+            <header class="text-center mb-12">
+                <h1 class="text-4xl md:text-5xl font-bold text-orange-500 text-shadow">Free Fire Randomizer</h1>
+                <p class="text-gray-400 mt-2">Choose Tournament Mode</p>
+            </header>
+            <div class="flex flex-col md:flex-row justify-center items-center gap-8">
+                <button id="select-br-mode" class="btn text-2xl font-bold py-8 px-12 bg-slate-800/70 rounded-2xl ring-1 ring-white/10 w-full md:w-auto">Battle Royale Mode</button>
+                <button id="select-cs-mode" class="btn text-2xl font-bold py-8 px-12 bg-slate-800/70 rounded-2xl ring-1 ring-white/10 w-full md:w-auto">Clash Squad Mode</button>
+            </div>
+        </div>
+
+        <!-- Battle Royale View -->
+        <div id="br-view" class="hidden">
             <header class="text-center mb-8">
-                <h1 class="text-4xl md:text-5xl font-bold text-orange-500 text-shadow">Referee Control Panel</h1>
+                <h1 class="text-4xl md:text-5xl font-bold text-orange-500 text-shadow">Battle Royale Control Panel</h1>
                 <p class="text-gray-400 mt-2">Setup the tournament and randomize maps</p>
             </header>
-
-            <!-- Setup Section -->
-            <div id="setup-section" class="bg-slate-900/50 p-6 rounded-2xl shadow-2xl mb-8 ring-1 ring-white/10 backdrop-blur-sm">
+            <div id="br-setup-section" class="bg-slate-900/50 p-6 rounded-2xl shadow-2xl mb-8 ring-1 ring-white/10 backdrop-blur-sm">
                 <h2 class="text-2xl font-bold mb-4 border-b-2 border-slate-700 pb-2">Tournament Setup</h2>
                 <div class="grid md:grid-cols-2 gap-6">
                     <div>
-                        <label for="tournament-title" class="block mb-2 font-medium text-gray-300">Tournament Name</label>
-                        <input type="text" id="tournament-title" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:outline-none" placeholder="e.g., Free Fire Pro League Season X">
+                        <label for="br-tournament-title" class="block mb-2 font-medium text-gray-300">Tournament Name</label>
+                        <input type="text" id="br-tournament-title" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:outline-none" placeholder="e.g., Free Fire Pro League Season X">
                     </div>
                     <div>
-                        <label for="game-count" class="block mb-2 font-medium text-gray-300">Total Number of Games</label>
-                        <input type="number" id="game-count" min="1" max="10" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:outline-none" placeholder="Enter number of games (Max 10)">
+                        <label for="br-game-count" class="block mb-2 font-medium text-gray-300">Total Number of Games</label>
+                        <input type="number" id="br-game-count" min="1" max="10" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:outline-none" placeholder="Enter number of games (Max 10)">
                     </div>
                 </div>
-
                 <h3 class="text-xl font-bold mt-6 mb-4">Select maps to use (Max 6 maps)</h3>
-                <div id="map-selection" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-                    <!-- Map checkboxes will be injected here by JS -->
-                </div>
-
+                <div id="br-map-selection" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4"></div>
                 <div class="mt-8 text-center">
-                    <button id="setup-button" class="btn bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg">
-                        Start Tournament
-                    </button>
+                    <button id="br-setup-button" class="btn bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg">Start Tournament</button>
                 </div>
             </div>
-
-            <!-- Control Section -->
-            <div id="control-section" class="hidden sticky-header bg-slate-900/50 p-6 rounded-2xl shadow-2xl ring-1 ring-white/10 backdrop-blur-sm mb-8">
+            <div id="br-control-section" class="hidden sticky-header bg-slate-900/50 p-6 rounded-2xl shadow-2xl ring-1 ring-white/10 backdrop-blur-sm mb-8">
                  <div class="flex flex-col md:flex-row justify-between items-center mb-6">
-                    <h2 id="display-tournament-title" class="text-3xl font-bold text-orange-400 text-shadow"></h2>
+                    <h2 id="br-display-tournament-title" class="text-3xl font-bold text-orange-400 text-shadow"></h2>
                     <div class="flex items-center space-x-4 mt-4 md:mt-0">
-                         <button id="reset-button" class="btn bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-2 px-4 rounded-lg shadow-md">
-                            Reset All
-                        </button>
-                         <button id="copy-link-button" class="btn bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-2 px-4 rounded-lg shadow-md">
-                            Copy Link for Teams
-                        </button>
+                         <button id="br-reset-button" class="btn bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-2 px-4 rounded-lg shadow-md">Reset All</button>
+                         <button id="br-copy-link-button" class="btn bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-2 px-4 rounded-lg shadow-md">Copy Link for Teams</button>
                     </div>
                 </div>
-                
                 <div class="text-center mb-8">
-                    <button id="randomize-button" class="btn bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-10 text-xl rounded-lg shadow-xl disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed disabled:transform-none">
-                        Randomize Next Game
-                    </button>
-                    <p id="next-game-info" class="text-gray-400 mt-2"></p>
+                    <button id="br-randomize-button" class="btn bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-10 text-xl rounded-lg shadow-xl disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed disabled:transform-none">Randomize Next Game</button>
+                    <p id="br-next-game-info" class="text-gray-400 mt-2"></p>
                 </div>
             </div>
+            <div id="br-results-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </div>
 
-            <div id="results-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Result cards will be injected here -->
+        <!-- Clash Squad View -->
+        <div id="cs-view" class="hidden">
+             <header class="text-center mb-8">
+                <h1 class="text-4xl md:text-5xl font-bold text-orange-500 text-shadow">Clash Squad Control Panel</h1>
+                <p class="text-gray-400 mt-2">Setup the match and randomize maps</p>
+            </header>
+            <div id="cs-setup-section" class="bg-slate-900/50 p-6 rounded-2xl shadow-2xl mb-8 ring-1 ring-white/10 backdrop-blur-sm">
+                <h2 class="text-2xl font-bold mb-4 border-b-2 border-slate-700 pb-2">Match Setup</h2>
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label for="cs-team-a-name" class="block mb-2 font-medium text-gray-300">Team A Name</label>
+                        <input type="text" id="cs-team-a-name" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:outline-none" placeholder="Enter Team A Name">
+                    </div>
+                    <div>
+                        <label for="cs-team-b-name" class="block mb-2 font-medium text-gray-300">Team B Name</label>
+                        <input type="text" id="cs-team-b-name" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:outline-none" placeholder="Enter Team B Name">
+                    </div>
+                </div>
+                <div>
+                    <label for="cs-bo-select" class="block mb-2 font-medium text-gray-300">Match Format</label>
+                    <select id="cs-bo-select" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:outline-none">
+                        <option value="1">Best of 1 (BO1)</option>
+                        <option value="3">Best of 3 (BO3)</option>
+                        <option value="5">Best of 5 (BO5)</option>
+                        <option value="7">Best of 7 (BO7)</option>
+                    </select>
+                </div>
+                <h3 class="text-xl font-bold mt-6 mb-4">Select Map Pool (Max 6 maps)</h3>
+                <div id="cs-map-selection" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4"></div>
+                <div class="mt-8 text-center">
+                    <button id="cs-setup-button" class="btn bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg">Start Match</button>
+                </div>
             </div>
+            <div id="cs-control-section" class="hidden sticky-header bg-slate-900/50 p-6 rounded-2xl shadow-2xl ring-1 ring-white/10 backdrop-blur-sm mb-8">
+                 <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                    <h2 id="cs-display-title" class="text-3xl font-bold text-orange-400 text-shadow"></h2>
+                    <div class="flex items-center space-x-4 mt-4 md:mt-0">
+                         <button id="cs-reset-button" class="btn bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-2 px-4 rounded-lg shadow-md">Reset All</button>
+                         <button id="cs-copy-link-button" class="btn bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-2 px-4 rounded-lg shadow-md">Copy Link for Teams</button>
+                    </div>
+                </div>
+                <div class="text-center mb-8">
+                    <button id="cs-randomize-button" class="btn bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-10 text-xl rounded-lg shadow-xl disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed disabled:transform-none">Randomize Next Game</button>
+                    <p id="cs-next-game-info" class="text-gray-400 mt-2"></p>
+                </div>
+            </div>
+            <div id="cs-results-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </div>
 
         <!-- Team View -->
         <div id="team-view" class="hidden">
             <header class="text-center mb-8">
                 <h1 id="team-view-title" class="text-4xl md:text-5xl font-bold text-orange-500 text-shadow"></h1>
-                <p class="text-gray-400 mt-2">Map Randomizer Results</p>
+                <p id="team-view-subtitle" class="text-gray-400 mt-2">Map Randomizer Results</p>
             </header>
-            <div id="team-results-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                 <!-- Team result cards will be injected here -->
-            </div>
-             <div id="team-waiting-message" class="text-center py-16">
+            <div id="team-results-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            <div id="team-waiting-message" class="text-center py-16">
                 <p class="text-2xl text-gray-500">Waiting for referee setup...</p>
             </div>
         </div>
         
         <!-- Toast Notification -->
-        <div id="toast" class="fixed bottom-5 right-5 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-300">
-            Link copied successfully!
-        </div>
+        <div id="toast" class="fixed bottom-5 right-5 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-300"></div>
 
     </div>
 
@@ -163,8 +201,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const app = {
                 // --- CONFIGURATION ---
-                STORAGE_KEY: 'ff_map_randomizer_state_en_v14',
-                // All available maps. Using official Free Fire links.
+                STORAGE_KEY: 'ff_map_randomizer_state_en_v16',
                 ALL_MAPS: [
                     { id: 'bermuda', name: 'Bermuda', img: 'https://dl.dir.freefiremobile.com/common/Local/TH/CommuTournament/map/Bermuda.jpg' },
                     { id: 'purgatory', name: 'Purgatory', img: 'https://dl.dir.freefiremobile.com/common/Local/TH/CommuTournament/map/Purgatory.jpg' },
@@ -176,34 +213,71 @@
 
                 // --- STATE ---
                 state: {
-                    tournamentTitle: '',
-                    totalGames: 0,
-                    initialMaps: [],
-                    remainingMaps: [],
-                    results: [],
-                    isSetup: false,
+                    mode: null, // 'br' or 'cs'
+                    br: {
+                        tournamentTitle: '',
+                        totalGames: 0,
+                        initialMaps: [],
+                        remainingMaps: [],
+                        results: [],
+                        isSetup: false,
+                    },
+                    cs: {
+                        teamAName: '',
+                        teamBName: '',
+                        boFormat: 1,
+                        mapPool: [],
+                        results: [], // { game, map, firstBan }
+                        isSetup: false,
+                    }
                 },
                 animationRunning: false,
 
                 // --- UI ELEMENTS ---
                 ui: {
-                    refereeView: document.getElementById('referee-view'),
+                    modeSelectionView: document.getElementById('mode-selection-view'),
+                    brView: document.getElementById('br-view'),
+                    csView: document.getElementById('cs-view'),
                     teamView: document.getElementById('team-view'),
-                    setupSection: document.getElementById('setup-section'),
-                    controlSection: document.getElementById('control-section'),
-                    mapSelection: document.getElementById('map-selection'),
-                    tournamentTitleInput: document.getElementById('tournament-title'),
-                    gameCountInput: document.getElementById('game-count'),
-                    setupButton: document.getElementById('setup-button'),
-                    resetButton: document.getElementById('reset-button'),
-                    copyLinkButton: document.getElementById('copy-link-button'),
-                    randomizeButton: document.getElementById('randomize-button'),
-                    resultsGrid: document.getElementById('results-grid'),
-                    teamResultsGrid: document.getElementById('team-results-grid'),
-                    displayTournamentTitle: document.getElementById('display-tournament-title'),
+                    
+                    selectBrModeBtn: document.getElementById('select-br-mode'),
+                    selectCsModeBtn: document.getElementById('select-cs-mode'),
+                    
+                    // BR UI
+                    brSetupSection: document.getElementById('br-setup-section'),
+                    brControlSection: document.getElementById('br-control-section'),
+                    brMapSelection: document.getElementById('br-map-selection'),
+                    brTournamentTitleInput: document.getElementById('br-tournament-title'),
+                    brGameCountInput: document.getElementById('br-game-count'),
+                    brSetupButton: document.getElementById('br-setup-button'),
+                    brResetButton: document.getElementById('br-reset-button'),
+                    brCopyLinkButton: document.getElementById('br-copy-link-button'),
+                    brRandomizeButton: document.getElementById('br-randomize-button'),
+                    brResultsGrid: document.getElementById('br-results-grid'),
+                    brDisplayTournamentTitle: document.getElementById('br-display-tournament-title'),
+                    brNextGameInfo: document.getElementById('br-next-game-info'),
+
+                    // CS UI
+                    csSetupSection: document.getElementById('cs-setup-section'),
+                    csControlSection: document.getElementById('cs-control-section'),
+                    csTeamAInput: document.getElementById('cs-team-a-name'),
+                    csTeamBInput: document.getElementById('cs-team-b-name'),
+                    csBoSelect: document.getElementById('cs-bo-select'),
+                    csMapSelection: document.getElementById('cs-map-selection'),
+                    csSetupButton: document.getElementById('cs-setup-button'),
+                    csResetButton: document.getElementById('cs-reset-button'),
+                    csCopyLinkButton: document.getElementById('cs-copy-link-button'),
+                    csRandomizeButton: document.getElementById('cs-randomize-button'),
+                    csResultsGrid: document.getElementById('cs-results-grid'),
+                    csDisplayTitle: document.getElementById('cs-display-title'),
+                    csNextGameInfo: document.getElementById('cs-next-game-info'),
+
+                    // Team View UI
                     teamViewTitle: document.getElementById('team-view-title'),
+                    teamViewSubtitle: document.getElementById('team-view-subtitle'),
+                    teamResultsGrid: document.getElementById('team-results-grid'),
                     teamWaitingMessage: document.getElementById('team-waiting-message'),
-                    nextGameInfo: document.getElementById('next-game-info'),
+                    
                     toast: document.getElementById('toast'),
                 },
 
@@ -223,7 +297,7 @@
                         }
                     });
                 },
-
+                
                 // --- STATE MANAGEMENT ---
                 saveState() {
                     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.state));
@@ -234,99 +308,96 @@
                     if (savedState) {
                         this.state = JSON.parse(savedState);
                     } else {
-                        // If no state is found in storage (e.g., after a reset), reset the in-memory state.
                         this.state = {
-                            tournamentTitle: '',
-                            totalGames: 0,
-                            initialMaps: [],
-                            remainingMaps: [],
-                            results: [],
-                            isSetup: false,
+                            mode: null,
+                            br: { tournamentTitle: '', totalGames: 0, initialMaps: [], remainingMaps: [], results: [], isSetup: false },
+                            cs: { teamAName: '', teamBName: '', boFormat: 1, mapPool: [], results: [], isSetup: false }
                         };
                     }
                 },
 
                 resetState() {
                     if(confirm('Are you sure you want to reset the entire tournament? All data will be lost.')) {
-                        // Remove the item from storage. This triggers the 'storage' event for other tabs.
                         localStorage.removeItem(this.STORAGE_KEY);
-
-                        // Also reset the state for the current (referee) view.
-                        this.loadState(); // This will reset the state object to default
-                        
-                        // Update the referee UI immediately.
-                        this.updateRefereeView(false);
+                        this.loadState();
+                        this.updateRefereeView();
                     }
                 },
 
                 // --- REFEREE VIEW LOGIC ---
                 initRefereeView() {
-                    this.ui.refereeView.style.display = 'block';
-                    this.populateMapSelection();
-                    this.ui.setupButton.addEventListener('click', this.handleSetup.bind(this));
-                    this.ui.resetButton.addEventListener('click', this.resetState.bind(this));
-                    this.ui.copyLinkButton.addEventListener('click', this.copyTeamLink.bind(this));
-                    this.ui.randomizeButton.addEventListener('click', this.randomizeNextMap.bind(this));
-                    this.updateRefereeView(false);
+                    this.ui.selectBrModeBtn.addEventListener('click', () => this.setMode('br'));
+                    this.ui.selectCsModeBtn.addEventListener('click', () => this.setMode('cs'));
+                    
+                    // BR Listeners
+                    this.ui.brSetupButton.addEventListener('click', this.handleBrSetup.bind(this));
+                    this.ui.brResetButton.addEventListener('click', this.resetState.bind(this));
+                    this.ui.brCopyLinkButton.addEventListener('click', () => this.copyTeamLink('br'));
+                    this.ui.brRandomizeButton.addEventListener('click', this.randomizeBrNextMap.bind(this));
+                    
+                    // CS Listeners
+                    this.ui.csSetupButton.addEventListener('click', this.handleCsSetup.bind(this));
+                    this.ui.csResetButton.addEventListener('click', this.resetState.bind(this));
+                    this.ui.csCopyLinkButton.addEventListener('click', () => this.copyTeamLink('cs'));
+                    this.ui.csRandomizeButton.addEventListener('click', this.randomizeCsNextMap.bind(this));
+
+                    this.populateMapSelection(this.ui.brMapSelection);
+                    this.populateMapSelection(this.ui.csMapSelection);
+                    this.updateRefereeView();
+                },
+                
+                setMode(mode) {
+                    this.state.mode = mode;
+                    this.saveState();
+                    this.updateRefereeView();
                 },
 
-                populateMapSelection() {
-                    this.ui.mapSelection.innerHTML = '';
+                updateRefereeView() {
+                    this.ui.modeSelectionView.style.display = this.state.mode ? 'none' : 'block';
+                    this.ui.brView.style.display = this.state.mode === 'br' ? 'block' : 'none';
+                    this.ui.csView.style.display = this.state.mode === 'cs' ? 'block' : 'none';
+
+                    if (this.state.mode === 'br') this.updateBrRefereeView();
+                    if (this.state.mode === 'cs') this.updateCsRefereeView();
+                },
+
+                populateMapSelection(container) {
+                    container.innerHTML = '';
                     this.ALL_MAPS.forEach(map => {
                         const mapElement = `
                             <div class="relative">
-                                <input type="checkbox" id="map-${map.id}" value='${JSON.stringify(map)}' class="map-checkbox absolute opacity-0 w-0 h-0">
-                                <label for="map-${map.id}" class="map-card cursor-pointer block border-4 border-transparent rounded-lg overflow-hidden relative aspect-video">
+                                <input type="checkbox" id="${container.id}-map-${map.id}" value='${JSON.stringify(map)}' class="map-checkbox absolute opacity-0 w-0 h-0">
+                                <label for="${container.id}-map-${map.id}" class="map-card cursor-pointer block border-4 border-transparent rounded-lg overflow-hidden relative aspect-video">
                                     <div class="w-full h-full" style="background-image: url('${map.img}'); background-size: cover; background-position: center;"></div>
                                     <div class="overlay absolute inset-0 bg-black opacity-50 transition-opacity duration-300"></div>
-                                    
-                                    <!-- Name that appears on selection -->
                                     <div class="absolute inset-0 flex items-center justify-center p-2">
                                         <h4 class="map-card-name-selected text-3xl font-bold text-white uppercase text-shadow">${map.name}</h4>
                                     </div>
-
-                                    <!-- Permanent label at the bottom -->
                                     <div class="absolute bottom-0 left-0 w-full p-1 bg-black/60">
                                         <p class="text-white text-center text-xs font-bold uppercase tracking-wider">${map.name}</p>
                                     </div>
-
                                     <div class="checkmark absolute top-2 right-2 w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center opacity-0 transition-opacity duration-300">
                                         <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                                     </div>
                                 </label>
                             </div>
                         `;
-                        this.ui.mapSelection.insertAdjacentHTML('beforeend', mapElement);
+                        container.insertAdjacentHTML('beforeend', mapElement);
                     });
                 },
 
-                handleSetup() {
-                    const title = this.ui.tournamentTitleInput.value.trim();
-                    const games = parseInt(this.ui.gameCountInput.value);
-                    const selectedMaps = Array.from(document.querySelectorAll('.map-checkbox:checked')).map(cb => JSON.parse(cb.value));
+                // --- BATTLE ROYALE SPECIFIC LOGIC ---
+                handleBrSetup() {
+                    const title = this.ui.brTournamentTitleInput.value.trim();
+                    const games = parseInt(this.ui.brGameCountInput.value);
+                    const selectedMaps = Array.from(this.ui.brMapSelection.querySelectorAll('.map-checkbox:checked')).map(cb => JSON.parse(cb.value));
 
-                    if (!title) {
-                        alert('Please enter a tournament name');
-                        return;
-                    }
-                    if (isNaN(games) || games <= 0 || games > 10) {
-                        alert('Please enter a valid number of games (1-10)');
-                        return;
-                    }
-                    if (selectedMaps.length === 0) {
-                        alert('Please select at least one map');
-                        return;
-                    }
-                     if (selectedMaps.length > 6) {
-                        alert('You can select a maximum of 6 maps');
-                        return;
-                    }
-                    if (games > selectedMaps.length && games < 7) {
-                        alert(`The number of games (${games}) cannot be greater than the number of selected maps (${selectedMaps.length}) unless it's 7 or more.`);
+                    if (!title || isNaN(games) || games <= 0 || games > 10 || selectedMaps.length === 0 || selectedMaps.length > 6 || (games > selectedMaps.length && games < 7)) {
+                        alert('Invalid BR setup. Please check all fields.');
                         return;
                     }
 
-                    this.state = {
+                    this.state.br = {
                         tournamentTitle: title,
                         totalGames: games,
                         initialMaps: [...selectedMaps],
@@ -336,94 +407,191 @@
                     };
 
                     this.saveState();
-                    this.updateRefereeView(false);
+                    this.updateBrRefereeView();
                 },
 
-                updateRefereeView(isNewRandom) {
-                    if (this.state.isSetup) {
-                        this.ui.setupSection.style.display = 'none';
-                        this.ui.controlSection.style.display = 'block';
-                        this.ui.displayTournamentTitle.textContent = this.state.tournamentTitle;
-                        this.renderGrid(this.ui.resultsGrid, false); // Referee view always renders instantly
-                        this.updateRandomizeButton();
+                updateBrRefereeView() {
+                    const brState = this.state.br;
+                    if (brState.isSetup) {
+                        this.ui.brSetupSection.style.display = 'none';
+                        this.ui.brControlSection.style.display = 'block';
+                        this.ui.brDisplayTournamentTitle.textContent = brState.tournamentTitle;
+                        this.renderGrid(this.ui.brResultsGrid, false, 'br');
+                        this.updateBrRandomizeButton();
                     } else {
-                        this.ui.setupSection.style.display = 'block';
-                        this.ui.controlSection.style.display = 'none';
-                        this.ui.tournamentTitleInput.value = '';
-                        this.ui.gameCountInput.value = '';
-                        document.querySelectorAll('.map-checkbox').forEach(cb => cb.checked = false);
-                        this.ui.resultsGrid.innerHTML = '';
+                        this.ui.brSetupSection.style.display = 'block';
+                        this.ui.brControlSection.style.display = 'none';
+                        this.ui.brTournamentTitleInput.value = '';
+                        this.ui.brGameCountInput.value = '';
+                        this.ui.brMapSelection.querySelectorAll('.map-checkbox').forEach(cb => cb.checked = false);
+                        this.ui.brResultsGrid.innerHTML = '';
                     }
                 },
                 
-                updateRandomizeButton() {
-                    const nextGameNumber = this.state.results.length + 1;
-                    if (this.animationRunning || nextGameNumber > this.state.totalGames) {
-                        this.ui.randomizeButton.disabled = true;
-                        if (nextGameNumber > this.state.totalGames) {
-                           this.ui.nextGameInfo.textContent = 'The tournament has ended!';
+                updateBrRandomizeButton() {
+                    const nextGameNumber = this.state.br.results.length + 1;
+                    if (this.animationRunning || nextGameNumber > this.state.br.totalGames) {
+                        this.ui.brRandomizeButton.disabled = true;
+                        if (nextGameNumber > this.state.br.totalGames) {
+                           this.ui.brNextGameInfo.textContent = 'The tournament has ended!';
                         }
                     } else {
-                        this.ui.randomizeButton.disabled = false;
-                        this.ui.nextGameInfo.textContent = `Click to randomize map for Game ${nextGameNumber}`;
+                        this.ui.brRandomizeButton.disabled = false;
+                        this.ui.brNextGameInfo.textContent = `Click to randomize map for Game ${nextGameNumber}`;
                     }
                 },
 
-                async randomizeNextMap() {
+                async randomizeBrNextMap() {
                     if (this.animationRunning) return;
                     this.animationRunning = true;
-                    this.updateRandomizeButton();
+                    this.updateBrRandomizeButton();
 
-                    const nextGameNumber = this.state.results.length + 1;
+                    const nextGameNumber = this.state.br.results.length + 1;
 
-                    // --- Pool Reset Logic ---
-                    if (nextGameNumber === 7) {
-                        this.state.remainingMaps = [...this.state.initialMaps];
+                    if (this.state.br.remainingMaps.length === 0) {
+                        this.state.br.remainingMaps = [...this.state.br.initialMaps];
                         this.showToast('Map pool has been reset!', 'bg-blue-500');
                     }
-                    if (this.state.remainingMaps.length === 0) {
-                        this.state.remainingMaps = [...this.state.initialMaps];
-                    }
                     
-                    // --- Actual Randomization ---
-                    const remaining = this.state.remainingMaps;
+                    const remaining = [...this.state.br.remainingMaps];
                     const randomIndex = Math.floor(Math.random() * remaining.length);
                     const selectedMap = remaining[randomIndex];
 
-                    // --- Update State ---
-                    this.state.results.push({
-                        game: nextGameNumber,
-                        map: selectedMap,
-                    });
-                    this.state.remainingMaps.splice(randomIndex, 1);
+                    this.state.br.results.push({ game: nextGameNumber, map: selectedMap });
+                    this.state.br.remainingMaps.splice(randomIndex, 1);
                     
-                    // Save state so team view can pick up the change
                     this.saveState(); 
 
-                    // --- Animate on referee view ---
-                    const refereeCard = document.getElementById(`result-card-${nextGameNumber}`);
-                    await this.runRandomizationAnimation(refereeCard, selectedMap);
+                    const refereeCard = document.getElementById(`br-result-card-${nextGameNumber}`);
+                    await this.runRandomizationAnimation(refereeCard, selectedMap, remaining);
                     
                     this.animationRunning = false;
-                    this.updateRandomizeButton();
+                    this.updateBrRandomizeButton();
                 },
-                
-                async runRandomizationAnimation(targetCardElement, finalMap) {
+
+                // --- CLASH SQUAD SPECIFIC LOGIC ---
+                handleCsSetup() {
+                    const teamA = this.ui.csTeamAInput.value.trim();
+                    const teamB = this.ui.csTeamBInput.value.trim();
+                    const bo = parseInt(this.ui.csBoSelect.value);
+                    const mapPool = Array.from(this.ui.csMapSelection.querySelectorAll('.map-checkbox:checked')).map(cb => JSON.parse(cb.value));
+                    
+                    const requiredMaps = { 1: 1, 3: 2, 5: 4, 7: 6 };
+
+                    if (!teamA || !teamB || mapPool.length < requiredMaps[bo]) {
+                        alert(`Invalid CS setup. Please check all fields. BO${bo} requires at least ${requiredMaps[bo]} maps.`);
+                        return;
+                    }
+
+                    this.state.cs = {
+                        teamAName: teamA,
+                        teamBName: teamB,
+                        boFormat: bo,
+                        mapPool: [...mapPool],
+                        results: [],
+                        isSetup: true,
+                    };
+
+                    this.saveState();
+                    this.updateCsRefereeView();
+                },
+
+                updateCsRefereeView() {
+                    const csState = this.state.cs;
+                    if (csState.isSetup) {
+                        this.ui.csSetupSection.style.display = 'none';
+                        this.ui.csControlSection.style.display = 'block';
+                        this.ui.csDisplayTitle.textContent = `${csState.teamAName} vs ${csState.teamBName}`;
+                        this.renderGrid(this.ui.csResultsGrid, false, 'cs');
+                        this.updateCsRandomizeButton();
+                    } else {
+                        this.ui.csSetupSection.style.display = 'block';
+                        this.ui.csControlSection.style.display = 'none';
+                        // Reset fields
+                        this.ui.csTeamAInput.value = '';
+                        this.ui.csTeamBInput.value = '';
+                        this.ui.csBoSelect.value = '1';
+                        this.ui.csMapSelection.querySelectorAll('.map-checkbox').forEach(cb => cb.checked = false);
+                        this.ui.csResultsGrid.innerHTML = '';
+                    }
+                },
+
+                updateCsRandomizeButton() {
+                    const csState = this.state.cs;
+                    const nextGameNumber = csState.results.length + 1;
+                    const maxGames = Math.ceil(csState.boFormat / 2);
+                    const teamAScore = csState.results.filter(r => r.winner === csState.teamAName).length; // Assuming winner logic will be added
+                    const teamBScore = csState.results.filter(r => r.winner === csState.teamBName).length;
+
+                    if (this.animationRunning || nextGameNumber > csState.boFormat || teamAScore >= maxGames || teamBScore >= maxGames) {
+                        this.ui.csRandomizeButton.disabled = true;
+                        this.ui.csNextGameInfo.textContent = 'The match has ended!';
+                    } else {
+                        this.ui.csRandomizeButton.disabled = false;
+                        this.ui.csNextGameInfo.textContent = `Click to randomize map for Game ${nextGameNumber}`;
+                    }
+                },
+
+                async randomizeCsNextMap() {
+                    if (this.animationRunning) return;
+                    this.animationRunning = true;
+                    this.updateCsRandomizeButton();
+
+                    const csState = this.state.cs;
+                    const nextGameNumber = csState.results.length + 1;
+                    
+                    let mapPool = csState.mapPool.filter(poolMap => !csState.results.some(resMap => resMap.map.id === poolMap.id));
+                    
+                    const deciderGames = { 3: 3, 5: 5, 7: 7 };
+                    const isDecider = deciderGames[csState.boFormat] === nextGameNumber;
+
+                    if (mapPool.length === 0) {
+                        mapPool = [...csState.mapPool]; // Reset pool if empty
+                    }
+
+                    // Determine First Ban
+                    let firstBanTeam;
+                    const firstGameBanTeam = csState.results[0]?.firstBan;
+                    
+                    if (nextGameNumber === 1 || isDecider) {
+                        firstBanTeam = Math.random() < 0.5 ? csState.teamAName : csState.teamBName;
+                    } else {
+                        firstBanTeam = (nextGameNumber % 2 !== 0) ? firstGameBanTeam : (firstGameBanTeam === csState.teamAName ? csState.teamBName : csState.teamAName);
+                    }
+                    
+                    // Randomize Map
+                    const randomMapIndex = Math.floor(Math.random() * mapPool.length);
+                    const selectedMap = mapPool[randomMapIndex];
+
+                    // Update State
+                    csState.results.push({ game: nextGameNumber, map: selectedMap, firstBan: firstBanTeam });
+                    this.saveState();
+
+                    // Animate
+                    const refereeCard = document.getElementById(`cs-result-card-${nextGameNumber}`);
+                    await this.runRandomizationAnimation(refereeCard, selectedMap, mapPool, firstBanTeam);
+
+                    this.animationRunning = false;
+                    this.updateCsRandomizeButton();
+                },
+
+
+                // --- GENERIC & ANIMATION LOGIC ---
+                async runRandomizationAnimation(targetCardElement, finalMap, animationPool, firstBanTeam = null) {
                     if (!targetCardElement) return Promise.resolve();
 
                     const cardBack = targetCardElement.querySelector('.card-back');
                     const mapNameEl = cardBack.querySelector('h3');
-                    const animationDuration = 2500; // 2.5 seconds
-                    const updateInterval = 80; // ms, faster for smoother feel
+                    const firstBanEl = cardBack.querySelector('.first-ban-info');
+                    const animationDuration = 2500;
+                    const updateInterval = 80;
                     let startTime = null;
                     let animationFrameId = null;
 
-                    // Flip the card instantly to the back
                     targetCardElement.style.transition = 'none';
                     targetCardElement.classList.add('revealed');
 
-                    // Use remainingMaps for the animation reel
-                    const reel = [...this.state.remainingMaps, finalMap, ...this.state.remainingMaps, finalMap].sort(() => 0.5 - Math.random());
+                    const reel = [...animationPool, finalMap, ...animationPool, finalMap].sort(() => 0.5 - Math.random());
                     let reelIndex = 0;
                     let lastUpdateTime = 0;
 
@@ -443,10 +611,12 @@
                             if (elapsedTime < animationDuration) {
                                 animationFrameId = requestAnimationFrame(animate);
                             } else {
-                                // Stop the animation and show the final result
                                 cancelAnimationFrame(animationFrameId);
                                 cardBack.style.backgroundImage = `url('${finalMap.img}')`;
                                 mapNameEl.textContent = finalMap.name;
+                                if (firstBanEl && firstBanTeam) {
+                                    firstBanEl.textContent = `First Ban: ${firstBanTeam}`;
+                                }
                                 cardBack.classList.add('locked-in');
                                 targetCardElement.style.transition = 'transform 0.7s ease';
                                 resolve();
@@ -456,16 +626,16 @@
                     });
                 },
 
-                renderGrid(container, isNewRandom) {
+                renderGrid(container, isNewRandom, mode) {
                     container.innerHTML = '';
-                    const newGameNumber = this.state.results.length;
+                    const state = this.state[mode];
+                    const totalGames = mode === 'br' ? state.totalGames : state.boFormat;
+                    const newGameNumber = state.results.length;
 
-                    for (let i = 1; i <= this.state.totalGames; i++) {
-                        const result = this.state.results.find(r => r.game === i);
-                        const card = this.createResultCard(i, result);
-
+                    for (let i = 1; i <= totalGames; i++) {
+                        const result = state.results.find(r => r.game === i);
+                        const card = this.createResultCard(i, result, mode);
                         if (result) {
-                            // Reveal all cards instantly except the one being animated
                             if (!isNewRandom || result.game !== newGameNumber) {
                                 card.style.transition = 'none';
                                 card.classList.add('revealed');
@@ -475,36 +645,37 @@
                     }
                 },
 
-                createResultCard(gameNumber, result) {
+                createResultCard(gameNumber, result, mode) {
                     const card = document.createElement('div');
                     card.className = 'result-card relative aspect-[16/10] [transform-style:preserve-3d]';
-                    card.id = `result-card-${gameNumber}`;
+                    card.id = `${mode}-result-card-${gameNumber}`;
                     
                     const mapName = result ? result.map.name : '???';
                     const mapImg = result ? result.map.img : 'https://placehold.co/400x200/454545/999999?text=%3F';
                     const isLocked = result ? 'locked-in' : '';
+                    const firstBanInfo = (mode === 'cs' && result) ? `<p class="first-ban-info text-amber-300 text-xl font-bold mt-1">First Ban: ${result.firstBan}</p>` : `<p class="first-ban-info text-amber-300 text-xl font-bold mt-1"></p>`;
                     
                     card.innerHTML = `
-                        <!-- Card Front (Hidden) -->
                         <div class="card-face card-front absolute w-full h-full bg-slate-800 rounded-xl flex flex-col items-center justify-center border-2 border-dashed border-slate-600 transition-all duration-200">
                             <span class="text-5xl font-bold text-slate-500">?</span>
                             <h3 class="text-xl font-bold text-slate-400 mt-2">Game ${gameNumber}</h3>
                         </div>
-                        <!-- Card Back (Visible) -->
                         <div class="card-face card-back absolute w-full h-full rounded-xl overflow-hidden shadow-lg ${isLocked}" style="background-image: url('${mapImg}'); background-size: cover; background-position: center;">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                             <div class="absolute bottom-0 left-0 p-4 w-full">
-                                <p class="text-gray-200 text-sm font-medium">Game ${gameNumber}</p>
+                                <p class="text-xl font-bold text-white">Game ${gameNumber}</p>
                                 <h3 class="text-xl font-bold text-white text-shadow uppercase whitespace-nowrap">${mapName}</h3>
+                                ${firstBanInfo}
                             </div>
                         </div>
                     `;
                     return card;
                 },
 
-                copyTeamLink() {
+                copyTeamLink(mode) {
                     const url = new URL(window.location.href);
                     url.searchParams.set('view', 'team');
+                    url.searchParams.set('mode', mode);
                     navigator.clipboard.writeText(url.href).then(() => {
                         this.showToast('Link copied successfully!', 'bg-green-500');
                     }).catch(err => {
@@ -528,6 +699,12 @@
 
                 // --- TEAM VIEW LOGIC ---
                 initTeamView() {
+                    // Explicitly hide all referee views
+                    this.ui.modeSelectionView.style.display = 'none';
+                    this.ui.brView.style.display = 'none';
+                    this.ui.csView.style.display = 'none';
+                    
+                    // Show only the team view
                     this.ui.teamView.style.display = 'block';
                     this.updateTeamView();
                 },
@@ -535,33 +712,45 @@
                 async updateTeamView() {
                     if (this.animationRunning) return;
 
-                    if (!this.state.isSetup) {
+                    const mode = this.state.mode;
+                    if (!mode || !this.state[mode].isSetup) {
                         this.ui.teamResultsGrid.style.display = 'none';
-                        this.ui.teamResultsGrid.innerHTML = ''; // Clear the grid
+                        this.ui.teamResultsGrid.innerHTML = '';
                         this.ui.teamWaitingMessage.style.display = 'block';
                         this.ui.teamViewTitle.textContent = 'Free Fire Map Randomizer';
+                        this.ui.teamViewSubtitle.textContent = 'Map Randomizer Results';
                         return;
                     }
                     
                     this.ui.teamWaitingMessage.style.display = 'none';
                     this.ui.teamResultsGrid.style.display = 'grid';
-                    this.ui.teamViewTitle.textContent = this.state.tournamentTitle;
                     
+                    const state = this.state[mode];
+                    this.ui.teamViewTitle.textContent = mode === 'br' ? state.tournamentTitle : `${state.teamAName} vs ${state.teamBName}`;
+                    this.ui.teamViewSubtitle.textContent = mode === 'br' ? `Battle Royale - ${state.totalGames} Games` : `Clash Squad - Best of ${state.boFormat}`;
+
                     const revealedCount = this.ui.teamResultsGrid.querySelectorAll('.revealed').length;
-                    const isNewRandom = revealedCount < this.state.results.length;
+                    const isNewRandom = revealedCount < state.results.length;
 
                     if (isNewRandom) {
                         this.animationRunning = true;
-                        this.renderGrid(this.ui.teamResultsGrid, true);
-                        const newGameNumber = this.state.results.length;
-                        const finalMap = this.state.results[newGameNumber - 1].map;
-                        const teamCard = document.querySelector(`#team-results-grid #result-card-${newGameNumber}`);
+                        this.renderGrid(this.ui.teamResultsGrid, true, mode);
+                        const newGameNumber = state.results.length;
+                        const finalMap = state.results[newGameNumber - 1].map;
+                        const firstBan = state.results[newGameNumber - 1].firstBan;
+                        const teamCard = document.querySelector(`#team-results-grid #${mode}-result-card-${newGameNumber}`);
                         
-                        await this.runRandomizationAnimation(teamCard, finalMap);
+                        let animationPool;
+                        if (mode === 'br') {
+                           animationPool = [...state.remainingMaps, finalMap];
+                        } else {
+                           animationPool = state.mapPool.filter(poolMap => !state.results.slice(0, -1).some(resMap => resMap.map.id === poolMap.id));
+                        }
+
+                        await this.runRandomizationAnimation(teamCard, finalMap, animationPool, firstBan);
                         this.animationRunning = false;
-                    } else if (this.ui.teamResultsGrid.children.length !== this.state.totalGames) {
-                        // Handle setup/reset case
-                        this.renderGrid(this.ui.teamResultsGrid, false);
+                    } else if (this.ui.teamResultsGrid.children.length !== (state.totalGames || state.boFormat)) {
+                        this.renderGrid(this.ui.teamResultsGrid, false, mode);
                     }
                 }
             };
